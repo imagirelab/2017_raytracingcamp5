@@ -4,5 +4,6 @@ script:
   - make clean
   - make depend
   - make
+  - ls
   - ./a.out
   
