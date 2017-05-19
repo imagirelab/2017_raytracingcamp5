@@ -1,7 +1,7 @@
 language: cpp
 script:
   - g++ --version
-  - medir bin
+  - mkdir bin
   - make clean
   - make depend
   - make
