@@ -1,4 +1,4 @@
-TARGET=a.out
+TARGET=./bin/a.out
 
 CPP=g++
 OPT=

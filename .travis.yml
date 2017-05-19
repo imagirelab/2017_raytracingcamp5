@@ -1,9 +1,11 @@
 language: cpp
 script:
   - g++ --version
+  - medir bin
   - make clean
   - make depend
   - make
   - ls
+  - cd bin
   - ./a.out
   
