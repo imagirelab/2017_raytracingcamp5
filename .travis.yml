@@ -1,0 +1,7 @@
+language: cpp
+script:
+  - g++ --version
+  - make clean
+  - make depend
+  - make
+  
