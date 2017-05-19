@@ -1,26 +1,26 @@
 TARGET=a.out
 
-CC=g++
+CPP=g++
 OPT=
 INC=
 LIB=
 
 -include makefile.opt
 
-.SUFFIXES:.cc .c .o .h
+.SUFFIXES:.cpp .c .o .h
 
-SRC=$(shell ls *.cc)
+SRC=$(shell ls *.cpp)
 HED=$(shell ls *.h)
-OBJ=$(SRC:.cc=.o)
+OBJ=$(SRC:.cpp=.o)
 
 all: $(TARGET)
 $(TARGET): $(OBJ)
-	$(CC) $(OPT) -o $(TARGET) $(OBJ) $(LIB)
+	$(CPP) $(OPT) -o $(TARGET) $(OBJ) $(LIB)
 
 .c.o:
-	$(CC) $(OPT) -c $< $(INC)
-.cc.o:
-	$(CC) $(OPT) -c $< $(INC)
+	$(CPP) $(OPT) -c $< $(INC)
+.cpp.o:
+	$(CPP) $(OPT) -c $< $(INC)
 
 depend:
 	g++ -MM -MG $(SRC) >makefile.depend
