@@ -1,8 +1,8 @@
 language: cpp
 env:
   global:
-    - email: imagire@gmail.com
-    - username: imagire
+    - email=imagire@gmail.com
+    - username=imagire
     - secure: "v6t6pKfdiURPf2N2oxB8N2lfrJnS9nkvVK3Bf2+bCIE2ZP1fdQ96ASZ5x/3BRAJeTeFqNsoXvl/tz0Sjn7N73ruqc9W63jjU3S4H0x0u/3WjfgH8Ue52zDJAjEHFSz6D4bBEaImmW/gs9fy4oI376hMCNtJFN3MvWPkTruoWqPRexGHKhZFJH0mJfO/0LgX+qbHzRG5mwvR7BBQxzGoHxGMB6vAct+YrVLECkcREggGv2wh5/h1UiQBgyPzBZQWafU7NVa98V4iCguD+SeiHGTZcWCsoSwx/G2WPgrtMbrEnQf2Z/1CiMiOf1eDfxraYxPaPd+JEfYO8VyNWsMOtXTzngHGQZmwmpZ2ZeHO2ft/z5BNr9K2JXnUicf3gCLa6J88iCNiM26r+7UI6ZTagbY/o/oQPm5EIqp6eiZclBcY0Jo58vI9SeQ36+MRu5mmWtHrIl4fpKQXqQLaHCEUOf8/xrWXU8Pdi2LzQKHKD44rM3/zPWdJtd7nYn7i1eS2tKAOyDZ5i121vd0MoqaeGzxYkSF4qhis/GYYDR40Q/5kCYldw+pSUMuwW+ut5gAJozn/b45yWxTw2SUuJpceVNO0cu3X1hHh9qJbw07j/EXw/5mu2QdqM59DQng0soNoKUA9DELfXPH0rxenR7oujfBFekr6MKZfaEElATsfwLdU="
 script:
   - g++ --version
@@ -17,7 +17,7 @@ script:
 after_success:
 #  - echo $TRAVIS_PULL_REQUEST
 #  - echo $TRAVIS_BRANCH
-  - if ["$TRAVIS_PULL_REQUEST" == "true" || "$TRAVIS_BRANCH" != "master"]; then exit 1; fi
+  - if [["$TRAVIS_PULL_REQUEST" == "true"] || ["$TRAVIS_BRANCH" != "master"]]; then exit 1; fi
   - cp ../../static/* .
   - git config --global user.email "$email"
   - git config --global user.name "$username"
