@@ -3,7 +3,7 @@ env:
   global:
     - email: imagire@gmail.com
     - username: imagire
-    - secure: "nZUsnnGiHgLHwrbz0pem+O7csdvU0i4dMlg5W9fkbqOyKlFv/fTbULXaFbQ5pCLjZJXguRm0KVuEPKYU3FbWPT4cVkxs70r7URaMg0H+kT27s4wlzjLcrWR/MqRhNzxd7lRkC9+ZK91urJR9dTdMZglWTBa1WxDrRnJQpv0hKNhjKK3/jmXPEsf3LmBfwgrsbS+ocEV1Nv+Acaz4BYj+9aYpLW5UCgeel3OpGpWVtpj9hlUnwdS9G/PfuTR7ZfLCo8Z+9ZTo6wfjk+2UMDp5WdVY8rKYDV8sNCoTA88RFyhj/1lJ9qLReHm4EgAFhMTv/GZiViorp+wjuhnRS9Tawq+ua0sYvyuCyxf6L7ENaaO0UagZvK+rcUNLkl0o2sOE48vMHf5nOhvWr2NfQ2jzdaK8+0jqeXei7zo3X7oLfwHMLJjVe+rbungTcQnZgqvcodzM1z3yB16SBvRargHCps3mZ9kGSw5IEKPfIBNdZc98YH2dRvv0hbnBPYbiLwu5DKDKr0C0xn8JwwNnulHTvfVSHiUkscGrCAzrzsYSyh8IQ3mBF9BOeXmnsapvLVOcq4Uk0IIZY/XeYzt5mPVgKmGlTWQc4WyADSASslOkyBkJQMt3kz7Say+oLcqx0A6RC3SxzTe5hOXSqNq6cG1/jk1dGy7r9wn4kJ4eX6IyK8U="
+    - secure: "v6t6pKfdiURPf2N2oxB8N2lfrJnS9nkvVK3Bf2+bCIE2ZP1fdQ96ASZ5x/3BRAJeTeFqNsoXvl/tz0Sjn7N73ruqc9W63jjU3S4H0x0u/3WjfgH8Ue52zDJAjEHFSz6D4bBEaImmW/gs9fy4oI376hMCNtJFN3MvWPkTruoWqPRexGHKhZFJH0mJfO/0LgX+qbHzRG5mwvR7BBQxzGoHxGMB6vAct+YrVLECkcREggGv2wh5/h1UiQBgyPzBZQWafU7NVa98V4iCguD+SeiHGTZcWCsoSwx/G2WPgrtMbrEnQf2Z/1CiMiOf1eDfxraYxPaPd+JEfYO8VyNWsMOtXTzngHGQZmwmpZ2ZeHO2ft/z5BNr9K2JXnUicf3gCLa6J88iCNiM26r+7UI6ZTagbY/o/oQPm5EIqp6eiZclBcY0Jo58vI9SeQ36+MRu5mmWtHrIl4fpKQXqQLaHCEUOf8/xrWXU8Pdi2LzQKHKD44rM3/zPWdJtd7nYn7i1eS2tKAOyDZ5i121vd0MoqaeGzxYkSF4qhis/GYYDR40Q/5kCYldw+pSUMuwW+ut5gAJozn/b45yWxTw2SUuJpceVNO0cu3X1hHh9qJbw07j/EXw/5mu2QdqM59DQng0soNoKUA9DELfXPH0rxenR7oujfBFekr6MKZfaEElATsfwLdU="
 script:
   - g++ --version
   - cd src
@@ -18,11 +18,11 @@ after_success:
   - echo $TRAVIS_PULL_REQUEST
   - echo $TRAVIS_BRANCH
   - if ["$TRAVIS_PULL_REQUEST" == "true" -o "$TRAVIS_BRANCH" != "master"]; then exit 0
-  - git config --global user.email "$email";
-  - git config --global user.name "$username";
-  - rm -rf .git;
-  - git init;
-  - git add --all;
-  - git commit -m "deploy commit from travis";
-  - git push -f https://${GH_TOKEN}@github.com/imagirelab/rtc5.git master;
+  - git config --global user.email "$email"
+  - git config --global user.name "$username"
+  - rm -rf .git
+  - git init
+  - git add --all
+  - git commit -m "deploy commit from travis"
+  - git push -f https://${GH_TOKEN}@github.com/imagirelab/rtc5.git master
   
