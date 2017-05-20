@@ -37,6 +37,7 @@ int main()
 	fb[0] = new char[3 * WIDTH * HEIGHT];
 	fb[1] = new char[3 * WIDTH * HEIGHT];
 	char *fb0 = fb[0], *fb1 = fb[1];
+	#pragma omp parallel for
 	for (int i = 0; i < 3 * WIDTH * HEIGHT; i++) {
 		fb0[i] = fb1[i] = 0;
 	}
@@ -54,6 +55,7 @@ int main()
 			current = 1 - current;
 			char *dest = fb[current];
 			char *src = fb[1 - current];
+			#pragma omp parallel for
 			for (int i = 0; i < 3 * WIDTH * HEIGHT; i++) {
 				dest[i] = src[i];
 			}
