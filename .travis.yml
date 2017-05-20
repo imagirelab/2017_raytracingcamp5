@@ -18,6 +18,7 @@ after_success:
   - echo $TRAVIS_PULL_REQUEST
   - echo $TRAVIS_BRANCH
   - if ["$TRAVIS_PULL_REQUEST" == "true" -o "$TRAVIS_BRANCH" != "master"]; then exit 1 fi
+  - cp ../../static/* .
   - git config --global user.email "$email"
   - git config --global user.name "$username"
   - rm -rf .git
