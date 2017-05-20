@@ -15,12 +15,12 @@ script:
   - cd bin
   - ./a.out
 after_success:
-  - if [[ "$TRAVIS_BRANCH" == "master" ] && [ "$GH_TOKEN" ]]; then
-    git config --global user.email "$email";
-    git config --global user.name "$username";
-    rm -rf .git;
-    git init;
-    git add --all;
-    git commit -m "deploy commit from travis";
-    git push -f https://${GH_TOKEN}@github.com/imagirelab/rtc5.git master;
-    fi
+  - if ["$TRAVIS_PULL_REQUEST" != "true" -o "$TRAVIS_BRANCH" != "master"]; then exit 0
+  - git config --global user.email "$email";
+  - git config --global user.name "$username";
+  - rm -rf .git;
+  - git init;
+  - git add --all;
+  - git commit -m "deploy commit from travis";
+  - git push -f https://${GH_TOKEN}@github.com/imagirelab/rtc5.git master;
+  
