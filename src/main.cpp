@@ -25,7 +25,7 @@ void save(const double *data, unsigned char *buf, const char *filename, int step
 	#pragma omp parallel for
 	for (int i = 0; i < 3 * WIDTH * HEIGHT; i++) {
 		double tmp = 1.0 - exp(-data[i] * coeff);// tone mapping
-		buf[i] = unsigned char(pow(tmp, 1.0/2.2) * 255.999);// gamma correct
+		buf[i] = (unsigned char)(pow(tmp, 1.0/2.2) * 255.999);// gamma correct
 	}
 
 	// save
@@ -65,7 +65,7 @@ int main()
 		time_t t = time(NULL) - t0;
 
 		// 30 秒ごとに出力
-		int c = t / OUTPUT_INTERVAL;
+		int c = (int)(t / OUTPUT_INTERVAL);
 		if (count < c) {
 			current = 1 - current;
 			char filename[256];
