@@ -1,7 +1,7 @@
 TARGET=./bin/a.out
 
 CPP=g++
-OPT=
+OPT=-std=c++0x
 INC=
 LIB=
 
