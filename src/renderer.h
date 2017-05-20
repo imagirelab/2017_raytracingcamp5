@@ -3,7 +3,7 @@
 
 class renderer{
 private:
-	int steps_ = 0;
+	int steps_;
 	int WIDTH;
 	int HEIGHT;
 public:

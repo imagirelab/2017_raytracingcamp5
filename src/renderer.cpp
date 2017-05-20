@@ -1,6 +1,7 @@
 #include "renderer.h"
 
 renderer::renderer(int w, int h)
+	:steps_(0)
 {
 	WIDTH = w;
 	HEIGHT = h;
