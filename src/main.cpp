@@ -21,7 +21,7 @@
 
 void save(const double *data, unsigned char *buf, const char *filename, int steps)
 {
-	const double coeff = 1.0 / (0.1 * (double)steps);
+	const double coeff = 1.0 / (10.1 * (double)steps);
 	#pragma omp parallel for
 	for (int i = 0; i < 3 * WIDTH * HEIGHT; i++) {
 		double tmp = 1.0 - exp(-data[i] * coeff);// tone mapping
@@ -60,14 +60,16 @@ int main()
 	do
 	{
 		// fb[1-current] を読み込んで fb[current]にレンダリング
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		int steps = pRenderer->update(fb[1 - current], fb[current]);
 
-		time_t t = time(NULL) - t0;
+		// swap
+		current = 1 - current;
 
 		// 30 秒ごとに出力
+		time_t t = time(NULL) - t0;
 		int c = (int)(t / OUTPUT_INTERVAL);
 		if (count < c) {
-			current = 1 - current;
 			char filename[256];
 			snprintf(filename, 256, "%d.png", c);
 			save(fb[1 - current], image, filename, steps);

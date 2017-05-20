@@ -13,7 +13,7 @@ script:
   - make
   - cd bin
   - ./a.out
-  - ls -lsa ../../
+  - ls -lsaR ../../
 after_success:
 #  - echo $TRAVIS_PULL_REQUEST
 #  - echo $TRAVIS_BRANCH
