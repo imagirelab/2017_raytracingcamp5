@@ -13,6 +13,7 @@
 
 #define OUTPUT_INTERVAL 30
 #define FINISH_TIME (4 * 60 + 33)
+#define FINISH_MARGIN 2
 
 void save(const char *data, const char *filename)
 {
@@ -56,13 +57,13 @@ int main()
 				dest[i] = src[i];
 			}
 			char filename[256];
-			sprintf_s<256>(filename, "%d.png", c);
+			snprintf(filename, 256, "%d.png", c);
 			save(fb[1 - current], filename);
 			count++;
 		}
 
 		// 4分33秒以内に終了なので、前のフレームを考えてオーバーしそうならば終了する
-		if (FINISH_TIME - 2 <= t + (t - t_last)) break;
+		if (FINISH_TIME - FINISH_MARGIN <= t + (t - t_last)) break;
 
 		t_last = t;
 	}while (true);

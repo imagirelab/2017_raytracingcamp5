@@ -23,7 +23,7 @@ $(TARGET): $(OBJ)
 	$(CPP) $(OPT) -c $< $(INC)
 
 depend:
-	g++ -MM -MG $(SRC) >makefile.depend
+	g++ -MM -MG $(SRC) $(OPT) >makefile.depend
 
 clean:
 	rm -f $(TARGET) $(TARGET).exe
