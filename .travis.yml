@@ -11,7 +11,7 @@ script:
   - make clean
   - make depend
   - make
-  - ls -lsaR ../
+  - ls -lsaR
   - cd bin
   - ./a.out
 after_success:
