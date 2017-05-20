@@ -1,4 +1,7 @@
 language: cpp
+env:
+  global:
+    - secure: "nZUsnnGiHgLHwrbz0pem+O7csdvU0i4dMlg5W9fkbqOyKlFv/fTbULXaFbQ5pCLjZJXguRm0KVuEPKYU3FbWPT4cVkxs70r7URaMg0H+kT27s4wlzjLcrWR/MqRhNzxd7lRkC9+ZK91urJR9dTdMZglWTBa1WxDrRnJQpv0hKNhjKK3/jmXPEsf3LmBfwgrsbS+ocEV1Nv+Acaz4BYj+9aYpLW5UCgeel3OpGpWVtpj9hlUnwdS9G/PfuTR7ZfLCo8Z+9ZTo6wfjk+2UMDp5WdVY8rKYDV8sNCoTA88RFyhj/1lJ9qLReHm4EgAFhMTv/GZiViorp+wjuhnRS9Tawq+ua0sYvyuCyxf6L7ENaaO0UagZvK+rcUNLkl0o2sOE48vMHf5nOhvWr2NfQ2jzdaK8+0jqeXei7zo3X7oLfwHMLJjVe+rbungTcQnZgqvcodzM1z3yB16SBvRargHCps3mZ9kGSw5IEKPfIBNdZc98YH2dRvv0hbnBPYbiLwu5DKDKr0C0xn8JwwNnulHTvfVSHiUkscGrCAzrzsYSyh8IQ3mBF9BOeXmnsapvLVOcq4Uk0IIZY/XeYzt5mPVgKmGlTWQc4WyADSASslOkyBkJQMt3kz7Say+oLcqx0A6RC3SxzTe5hOXSqNq6cG1/jk1dGy7r9wn4kJ4eX6IyK8U="
 script:
   - g++ --version
   - cd src
@@ -9,4 +12,5 @@ script:
   - ls
   - cd bin
   - ./a.out
-  
+after_success:
+  - '[ "$TRAVIS_BRANCH" == "master" ] && [ "$GH_TOKEN" ] && ./deploy.sh'
