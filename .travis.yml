@@ -11,9 +11,9 @@ script:
   - make clean
   - make depend
   - make
-  - ls
   - cd bin
   - ./a.out
+  - ls -lsa ../../
 after_success:
 #  - echo $TRAVIS_PULL_REQUEST
 #  - echo $TRAVIS_BRANCH
