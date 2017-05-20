@@ -11,8 +11,8 @@
 // おおよそ30秒毎に、レンダリングの途中経過をbmpかpngで連番(000.png, 001.png, ...) で出力してください。
 // 4分33秒以内に自動で終了してください。
 
-#define WIDTH 256
-#define HEIGHT 256
+#define WIDTH 1980
+#define HEIGHT 1080
 
 #define OUTPUT_INTERVAL 30
 #define FINISH_TIME (4 * 60 + 33)
