@@ -1,6 +1,7 @@
 language: cpp
 script:
   - g++ --version
+  - cd src
   - mkdir bin
   - make clean
   - make depend
