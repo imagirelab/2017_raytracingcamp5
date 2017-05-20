@@ -5,14 +5,15 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../sdk/stb/stb_image_write.h"
 
-// ‚¨‚¨‚æ‚»30•b–ˆ‚ÉAƒŒƒ“ƒ_ƒŠƒ“ƒO‚Ì“r’†Œo‰ß‚ğbmp‚©png‚Å˜A”Ô(000.png, 001.png, ...) ‚Åo—Í‚µ‚Ä‚­‚¾‚³‚¢B
-// 4•ª33•bˆÈ“à‚É©“®‚ÅI—¹‚µ‚Ä‚­‚¾‚³‚¢B
+// ãŠãŠã‚ˆã30ç§’æ¯ã«ã€ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®é€”ä¸­çµŒéã‚’bmpã‹pngã§é€£ç•ª(000.png, 001.png, ...) ã§å‡ºåŠ›ã—ã¦ãã ã•ã„ã€‚
+// 4åˆ†33ç§’ä»¥å†…ã«è‡ªå‹•ã§çµ‚äº†ã—ã¦ãã ã•ã„ã€‚
 
 #define WIDTH 256
 #define HEIGHT 256
 
 #define OUTPUT_INTERVAL 30
-#define FINISH_TIME (4 * 60 + 33)
+#define FINISH_TIME (0 * 60 + 33)
+//#define FINISH_TIME (4 * 60 + 33)
 #define FINISH_MARGIN 2
 
 void save(const char *data, const char *filename)
@@ -30,7 +31,7 @@ int main()
 	time_t t_last = 0;
 	int count = 0;
 
-	// frame buffer ‚Ì‰Šú‰»
+	// frame buffer ã®åˆæœŸåŒ–
 	int current = 0;
 	char *fb[2];
 	fb[0] = new char[3 * WIDTH * HEIGHT];
@@ -42,12 +43,12 @@ int main()
 
 	do
 	{
-		// fb[current] ‚ÉƒŒƒ“ƒ_ƒŠƒ“ƒO
+		// fb[current] ã«ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 		time_t t = time(NULL) - t0;
 
-		// 30 •b‚²‚Æ‚Éo—Í
+		// 30 ç§’ã”ã¨ã«å‡ºåŠ›
 		int c = t / OUTPUT_INTERVAL;
 		if (count < c) {
 			current = 1 - current;
@@ -62,7 +63,7 @@ int main()
 			count++;
 		}
 
-		// 4•ª33•bˆÈ“à‚ÉI—¹‚È‚Ì‚ÅA‘O‚ÌƒtƒŒ[ƒ€‚ğl‚¦‚ÄƒI[ƒo[‚µ‚»‚¤‚È‚ç‚ÎI—¹‚·‚é
+		// 4åˆ†33ç§’ä»¥å†…ã«çµ‚äº†ãªã®ã§ã€å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’è€ƒãˆã¦ã‚ªãƒ¼ãƒãƒ¼ã—ãã†ãªã‚‰ã°çµ‚äº†ã™ã‚‹
 		if (FINISH_TIME - FINISH_MARGIN <= t + (t - t_last)) break;
 
 		t_last = t;
