@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="my_rand.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="RT_struct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

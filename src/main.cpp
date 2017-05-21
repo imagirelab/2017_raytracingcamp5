@@ -59,7 +59,7 @@ int main()
 	do
 	{
 		// fb[1-current] を読み込んで fb[current]にレンダリング
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+//		std::this_thread::sleep_for(std::chrono::seconds(1));
 		int steps = pRenderer->update(fb[1 - current], fb[current]);
 
 		// swap
