@@ -102,7 +102,7 @@ private:
 public:
 	Sphere() {}
 	Sphere(Vec3 cen, double r, Material *m) : center(cen), radius(r), mat_ptr(m) {};
-	bool hit(const Ray& r, double tmin, double tmax, HitRecord& rec) const override {
+	bool hit(const Ray& r, double tmin, double tmax, HitRecord& rec) const {
 		Vec3 oc = r.origin() - center;
 		double a = Vec3::dot(r.direction(), r.direction());
 		double b = Vec3::dot(oc, r.direction());
@@ -145,7 +145,7 @@ public:
 		}
 	}
 	void Append(Hitable *l) { if (n_ < LIST_MAX) { list[n_++] = l; } }
-	bool hit(const Ray &r, double tmin, double tmax, HitRecord& rec) const override
+	bool hit(const Ray &r, double tmin, double tmax, HitRecord& rec) const
 	{
 		HitRecord temp_rec;
 		bool hit_anything = false;
