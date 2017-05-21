@@ -1,7 +1,7 @@
 #include <cfloat>
 #include "renderer.h"
 
-#define M_PI 3.141592653589793826433
+#define PI 3.141592653589793826433
 
 my_rand Vec3::s_rand;
 my_rand Material::s_rand;
@@ -9,7 +9,7 @@ my_rand Material::s_rand;
 void Camera::init(Vec3 from, Vec3 lookat, Vec3 up, double fov, double aspect, double aperture, double focus_dist)
 {
 	lens_radius_ = aperture / 2;
-	double theta = fov * M_PI / 180;
+	double theta = fov * PI / 180;
 	double half_height = tan(theta / 2);
 	double half_width = aspect * half_height;
 	origin_ = from;
@@ -41,7 +41,7 @@ renderer::renderer(int w, int h)
 	cam_.init(from, lookat, up, 20, aspect, aperture, dist_to_focus);
 
 	// scene
-	double R = cos(M_PI / 4);
+	double R = cos(PI / 4);
 	scene_.Append(new Sphere(Vec3(0, 0, -1), 0.5, new Lambertian(Vec3(0.1, 0.2, 0.5))));
 	scene_.Append(new Sphere(Vec3(0, -100.5, -1), 100, new Lambertian(Vec3(0.8, 0.8, 0.0))));
 	scene_.Append(new Sphere(Vec3(1, 0, -1), 0.5, new Metal(Vec3(0.8, 0.6, 0.2), 0.0)));
