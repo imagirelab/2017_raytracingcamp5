@@ -16,8 +16,8 @@ public:
 	Camera() {}
 	void init(Vec3 from, Vec3 lookat, Vec3 up, double fov, double aspect, double aperture, double dist_to_focus);
 
-	Ray get_ray(double s, double t) {
-		Vec3 rd = Vec3::random_in_unit_disc() * lens_radius_;
+	Ray get_ray(double s, double t, my_rand &rnd) const {
+		Vec3 rd = Vec3::random_in_unit_disc(rnd) * lens_radius_;
 		Vec3 offset = u_ * rd.x + v_ * rd.y;
 		return Ray(origin_ + offset, lower_left_corner_ + horizontal_ * s + vertical_ * t - origin_ - offset);
 	}
@@ -29,17 +29,16 @@ private:
 	int steps_;
 	int WIDTH;
 	int HEIGHT;
-	my_rand rand_;
 	Camera cam_;
 	HitableList scene_;
 
-	Vec3 raytrace(Ray r, int depth);
-	Vec3 color(double u, double v);
+	Vec3 raytrace(Ray r, int depth, my_rand &rnd)const;
+	Vec3 color(double u, double v, my_rand &rnd)const;
 public:
 	renderer(int w, int h);
 	~renderer();
 	
-	int update(const double *src, double *dest);// ‹É—Í‘‚­”²‚¯‚é‚±‚Æ
+	void update(const double *src, double *dest, my_rand *a_rand)const;// ‹É—Í‘‚­”²‚¯‚é‚±‚Æ
 };
 
 #endif // !RENDERER_H
