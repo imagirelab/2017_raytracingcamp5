@@ -13,7 +13,6 @@ script:
   - make
   - ls -lsaR
   - cd bin
-  - valgrind ./a.out
   - ./a.out
 after_success:
 #  - echo $TRAVIS_PULL_REQUEST
