@@ -40,11 +40,10 @@ renderer::renderer(int w, int h)
 
 	// scene
 	double R = cos(PI / 4);
-	scene_.Append(new Sphere(Vec3(0, 0, -1), 0.5, new Lambertian(Vec3(0.1, 0.2, 0.5))));
-	scene_.Append(new Sphere(Vec3(0, -100.5, -1), 100, new Lambertian(Vec3(0.8, 0.8, 0.0))));
-	scene_.Append(new Sphere(Vec3(1, 0, -1), 0.5, new Metal(Vec3(0.8, 0.6, 0.2), 0.0)));
-	scene_.Append(new Sphere(Vec3(-1, 0, -1), 0.5, new Dielectric(1.5)));
-	scene_.Append(new Sphere(Vec3(-1, 0, -1), -0.45, new Dielectric(1.5)));
+	scene_.Append(new Sphere(Vec3(0, -1000, 0), 1000, new Lambertian(Vec3(0.5, 0.5, 0.5))));
+	scene_.Append(new Sphere(Vec3(0, 1, 0), 1.0, new Dielectric(1.5)));
+	scene_.Append(new Sphere(Vec3(-4, 1, 0), 1.0, new Lambertian(Vec3(0.4, 0.2, 0.1))));
+	scene_.Append(new Sphere(Vec3(4, 1, 0), 1.0, new Metal(Vec3(0.7, 0.6, 0.5), 0.0)));
 }
 
 renderer::~renderer()
@@ -60,8 +59,8 @@ Vec3 renderer::raytrace(Ray r, int depth, my_rand &rnd)const
 	if (scene_.hit(r, 0.001, DBL_MAX, rec)) {
 		Ray scattered;
 		Vec3 attenuation;
-		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
-			return attenuation * raytrace(scattered, depth + 1);
+		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered, rnd)) {
+			return attenuation * raytrace(scattered, depth + 1, rnd);
 		}
 		else {
 			return Vec3(0, 0, 0);
@@ -100,30 +99,4 @@ void renderer::update(const double *src, double *dest, my_rand *a_rand)const
 			dest[index + 2] = src[index + 2] + color.z;
 		}
 	}
-
-	return ++steps_;
 }
-
-	double R = cos(PI / 4);
-	scene_.Append(new Sphere(Vec3(0, -1000, 0), 1000, new Lambertian(Vec3(0.5, 0.5, 0.5))));
-	scene_.Append(new Sphere(Vec3(0, 1, 0), 1.0, new Dielectric(1.5)));
-	scene_.Append(new Sphere(Vec3(-4, 1, 0), 1.0, new Lambertian(Vec3(0.4, 0.2, 0.1))));
-	scene_.Append(new Sphere(Vec3(4, 1, 0), 1.0, new Metal(Vec3(0.7, 0.6, 0.5), 0.0)));
-	HitRecord rec;
-	if (scene_.hit(r, 0.001, DBL_MAX, rec)) {
-		Ray scattered;
-		Vec3 attenuation;
-		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered, rnd)) {
-			return attenuation * raytrace(scattered, depth + 1, rnd);
-//			return Vec3(0, 0, 0);
-		}
-		else {
-			return Vec3(0, 0, 0);
-		}
-	}
-	else {
-		Vec3 unit_direction = r.direction().normalize();
-		double t = 0.5*(unit_direction.y + 1.0);
-		return (1.0 - t)*Vec3(1.0, 1.0, 1.0) + t * Vec3(0.5, 0.7, 1.0);
-	}
-}
