@@ -28,8 +28,8 @@ renderer::renderer(int w, int h)
 	HEIGHT = h;
 
 	// camera
-	Vec3 from(13, 2, 3);
-	Vec3 lookat(0, 0, 0);
+	Vec3 from(13, 3, 3);
+	Vec3 lookat(0, 0.5, 0);
 	Vec3 up(0, 1, 0);
 	double fov = 20.0;
 	double aspect = (double)WIDTH / (double)HEIGHT;
@@ -101,3 +101,26 @@ void renderer::update(const double *src, double *dest, my_rand *a_rand)const
 		}
 	}
 }
+
+	double R = cos(PI / 4);
+	scene_.Append(new Sphere(Vec3(0, -1000, 0), 1000, new Lambertian(Vec3(0.5, 0.5, 0.5))));
+	scene_.Append(new Sphere(Vec3(0, 1, 0), 1.0, new Dielectric(1.5)));
+	scene_.Append(new Sphere(Vec3(-4, 1, 0), 1.0, new Lambertian(Vec3(0.4, 0.2, 0.1))));
+	scene_.Append(new Sphere(Vec3(4, 1, 0), 1.0, new Metal(Vec3(0.7, 0.6, 0.5), 0.0)));
+	HitRecord rec;
+	if (scene_.hit(r, 0.001, DBL_MAX, rec)) {
+		Ray scattered;
+		Vec3 attenuation;
+		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered, rnd)) {
+			return attenuation * raytrace(scattered, depth + 1, rnd);
+//			return Vec3(0, 0, 0);
+		}
+		else {
+			return Vec3(0, 0, 0);
+		}
+	}
+	else {
+		Vec3 unit_direction = r.direction().normalize();
+		double t = 0.5*(unit_direction.y + 1.0);
+		return (1.0 - t)*Vec3(1.0, 1.0, 1.0) + t * Vec3(0.5, 0.7, 1.0);
+	}
