@@ -30,7 +30,7 @@ renderer::renderer(int w, int h)
 	HEIGHT = h;
 
 	// camera
-	Vec3 from(13, 2, 3);
+	Vec3 from(0, 0, 3);
 	Vec3 lookat(0, 0, 0);
 	Vec3 up(0, 1, 0);
 	double fov = 20.0;
