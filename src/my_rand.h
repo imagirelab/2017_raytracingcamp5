@@ -3,6 +3,8 @@
 
 #include <climits>
 
+#include <iostream>
+
 // Xor-Shift
 class my_rand {
 private:
@@ -12,11 +14,11 @@ private:
 		const unsigned int t = s_[0] ^ (s_[0] << 11);
 		s_[0] = s_[1];
 		s_[1] = s_[2];
-		s_[2] = s_[3];
+		s_[2] = s_[3]+1;
 		return s_[3] = (s_[3] ^ (s_[3] >> 19)) ^ (t ^ (t >> 8));
 	}
 public:
-	my_rand(const unsigned int init = 0) {
+	my_rand(const unsigned int init = 1234567890) {
 		unsigned int s = init;
 		s_[0] = s = 1812433253U * (s ^ (s >> 30)) + 1;
 		s_[1] = s = 1812433253U * (s ^ (s >> 30)) + 2;
@@ -24,7 +26,10 @@ public:
 		s_[3] = s = 1812433253U * (s ^ (s >> 30)) + 4;
 	}
 
-	inline double get() { return (double)get_i() / UINT_MAX; }
+	inline double get() {
+		__int64 i = (((__int64)get_i() << 20) | (__int64)0x3FF0000000000000);
+		return (*(double*)&i) - 1.0f;
+	}
 };
 
 #endif // !MY_RAND_H

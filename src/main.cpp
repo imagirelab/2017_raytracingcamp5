@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <time.h>
+#include <omp.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../sdk/stb/stb_image_write.h"
@@ -11,8 +12,8 @@
 // おおよそ30秒毎に、レンダリングの途中経過をbmpかpngで連番(000.png, 001.png, ...) で出力してください。
 // 4分33秒以内に自動で終了してください。
 
-#define WIDTH 1980
-#define HEIGHT 1080
+#define WIDTH 1200
+#define HEIGHT 800
 
 #define OUTPUT_INTERVAL 30
 #define FINISH_TIME (4 * 60 + 33)
@@ -23,7 +24,8 @@ void save(const double *data, unsigned char *buf, const char *filename, int step
 	const double coeff = 1.0 / (10.1 * (double)steps);
 	#pragma omp parallel for
 	for (int i = 0; i < 3 * WIDTH * HEIGHT; i++) {
-		double tmp = 1.0 - exp(-data[i] * coeff);// tone mapping
+		double tmp = data[i] / (double)steps;// tone mapping
+//		double tmp = 1.0 - exp(-data[i] * coeff);// tone mapping
 		buf[i] = (unsigned char)(pow(tmp, 1.0/2.2) * 255.999);// gamma correct
 	}
 
@@ -54,13 +56,17 @@ int main()
 		fb0[i] = fb1[i] = 0;
 	}
 
+	my_rand *a_rand = new my_rand[omp_get_num_threads()];
 	renderer *pRenderer = new renderer(WIDTH, HEIGHT);
 
+	int steps = 0;
 	do
 	{
 		// fb[1-current] を読み込んで fb[current]にレンダリング
 //		std::this_thread::sleep_for(std::chrono::seconds(1));
-		int steps = pRenderer->update(fb[1 - current], fb[current]);
+		pRenderer->update(fb[1 - current], fb[current], a_rand);
+
+		steps++;
 
 		// swap
 		current = 1 - current;
@@ -82,6 +88,7 @@ int main()
 	}while (true);
 
 	delete pRenderer;
+	delete[] a_rand;
 	delete[] image;
 	delete[] fb[0];
 	delete[] fb[1];
