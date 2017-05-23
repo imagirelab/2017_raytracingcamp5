@@ -100,6 +100,8 @@ void renderer::update(const double *src, double *dest, my_rand *a_rand)const
 			dest[index + 2] = src[index + 2] + color.z;
 		}
 	}
+
+	return ++steps_;
 }
 
 	double R = cos(PI / 4);
@@ -124,3 +126,4 @@ void renderer::update(const double *src, double *dest, my_rand *a_rand)const
 		double t = 0.5*(unit_direction.y + 1.0);
 		return (1.0 - t)*Vec3(1.0, 1.0, 1.0) + t * Vec3(0.5, 0.7, 1.0);
 	}
+}
