@@ -1,7 +1,7 @@
 TARGET=./bin/a.out
 
 CPP=g++
-OPT=-std=c++0x -fopenmp -Wl,--stack,0xFFFFFF -O3
+OPT=-std=c++0x -fopenmp -O3
 INC=
 LIB=
 
