@@ -5,66 +5,58 @@
 #include "my_rand.h"
 
 
-class Vec3 {
-	static my_rand s_rand;
-public:
+struct Vec3 {
 	double x, y, z;
-	Vec3(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
-
-	inline Vec3& operator + (const Vec3 &v) { x += v.x; y += v.y; z += v.z; return *this; }
-	inline Vec3& operator - (const Vec3 &v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
-	inline Vec3& normalize() { double inv_l = (1.0 / length()); x *= inv_l; y *= inv_l; z *= inv_l;  return *this; }
-
-	inline Vec3 operator + (const Vec3 &v) const { return Vec3(x + v.x, y + v.y, z + v.z); }
-	inline Vec3 operator - (const Vec3 &v) const { return Vec3(x - v.x, y - v.y, z - v.z); }
-	inline Vec3 operator * (const Vec3 &v) const { return Vec3(x * v.x, y * v.y, z * v.z); }
-	inline Vec3 operator * (double a) const { return Vec3(a * x, a * y, a * z); }
-	inline Vec3 operator / (double a) const { return Vec3(x/ a, y / a, z / a); }
-	inline Vec3 operator-= (const Vec3 &v) const { return Vec3(x - v.x, y - v.y, z - v.z); }
-
+	Vec3(const double x = 0, const double y = 0, const double z = 0) : x(x), y(y), z(z) {}
+	inline Vec3 operator+(const Vec3 &b) const {return Vec3(x + b.x, y + b.y, z + b.z);}
+	inline Vec3 operator-(const Vec3 &b) const {return Vec3(x - b.x, y - b.y, z - b.z);}
+	inline Vec3 operator*(const Vec3 &b) const { return Vec3(x * b.x, y * b.y, z * b.z); }
+	inline Vec3 operator*(const double b) const {return Vec3(x * b, y * b, z * b);}
+	inline Vec3 operator/(const double b) const {return Vec3(x / b, y / b, z / b);}
 	inline Vec3 operator-() const { return Vec3(-x, -y, -z); }
+	inline const double length_sq() const { return x * x + y * y + z * z; }
+	inline const double length() const { return sqrt(length_sq()); }
+	inline Vec3 normalize() const { return *this / length(); }
+	Vec3 reflect(const Vec3& n) const;
+	bool refract(const Vec3& n, double ni_over_nt, Vec3& refracted) const;
 
-	inline double length_sq() const { return dot(*this, *this); }
-	inline double length() const { return sqrt(length_sq()); }
-	inline Vec3 normalize() const { return (*this) * (1.0/ length()); }
-	inline static double dot(const Vec3 &a, const Vec3 &b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
-	inline static Vec3 cross(const Vec3 &a, const Vec3 &b) { return Vec3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x); }
-
-	Vec3 reflect(const Vec3& n) const {return *this - n * 2 * dot(*this, n);}
-	bool refract(const Vec3& n, double ni_over_nt, Vec3& refracted) const {
-		Vec3 uv = this->normalize();
-		double dt = Vec3::dot(uv, n);
-		double discriminant = 1.0 - ni_over_nt * ni_over_nt * (1 - dt * dt);
-		if (discriminant > 0) {
-			refracted = (uv - n * dt)*ni_over_nt - n * sqrt(discriminant);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	static Vec3 random_in_unit_disc()
-	{
-		do {
-			Vec3 p = Vec3(s_rand.get(), s_rand.get(), 0) * 2.0 - Vec3(1, 1, 0);
-			if (dot(p, p) < 1.0) return p;
-		} while (true);
-	}
-
-	static Vec3 random_in_unit_sphere() 
-	{
-		do {
-			Vec3 p = Vec3(s_rand.get(), s_rand.get(), s_rand.get()) * 2.0 - Vec3(1, 1, 1);
-			if (dot(p, p) < 1.0) return p;
-		} while (true);
-	}
-
-
+	static Vec3 random_in_unit_disc(my_rand &rnd);
+	static Vec3 random_in_unit_sphere(my_rand &rnd);
 };
+inline Vec3 operator*(double f, const Vec3 &v) { return v * f; }
+inline Vec3 normalize(const Vec3 &v) {return v * (1.0 / v.length());}
+inline const double dot(const Vec3 &v1, const Vec3 &v2) {return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;}
+inline const Vec3 cross(const Vec3 &v1, const Vec3 &v2) { return Vec3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x); }
 
-inline Vec3 operator*(double f, const Vec3 &v) {
-	return v * f;
+inline Vec3 Vec3::reflect(const Vec3& n) const { return *this - n * 2 * dot(*this, n); }
+inline bool Vec3::refract(const Vec3& n, double ni_over_nt, Vec3& refracted) const {
+	Vec3 uv = this->normalize();
+	double dt = dot(uv, n);
+	double discriminant = 1.0 - ni_over_nt * ni_over_nt * (1 - dt * dt);
+	if (discriminant > 0) {
+		refracted = (uv - n * dt)*ni_over_nt - n * sqrt(discriminant);
+		return true;
+	}
+	else
+		return false;
 }
+
+inline Vec3 Vec3::random_in_unit_disc(my_rand &rnd)
+{
+	do {
+		Vec3 p = Vec3(rnd.get(), rnd.get(), 0) * 2.0 - Vec3(1, 1, 0);
+		if (dot(p, p) < 1.0) return p;
+	} while (true);
+}
+
+inline Vec3 Vec3::random_in_unit_sphere(my_rand &rnd)
+{
+	do {
+		Vec3 p = Vec3(rnd.get(), rnd.get(), rnd.get()) * 2.0 - Vec3(1, 1, 1);
+		if (dot(p, p) < 1.0) return p;
+	} while (true);
+}
+
 
 class Ray
 {
@@ -96,33 +88,33 @@ public:
 
 class Sphere : public Hitable {
 private:
-	Vec3 center;
-	double radius;
-	Material *mat_ptr;
+	Vec3 center_;
+	double radius_;
+	Material *mat_ptr_;
 public:
 	Sphere() {}
-	Sphere(Vec3 cen, double r, Material *m) : center(cen), radius(r), mat_ptr(m) {};
+	Sphere(Vec3 cen, double r, Material *m) : center_(cen), radius_(r), mat_ptr_(m) {};
 	bool hit(const Ray& r, double tmin, double tmax, HitRecord& rec) const {
-		Vec3 oc = r.origin() - center;
-		double a = Vec3::dot(r.direction(), r.direction());
-		double b = Vec3::dot(oc, r.direction());
-		double c = Vec3::dot(oc, oc) - radius*radius;
+		Vec3 oc = r.origin() - center_;
+		double a = dot(r.direction(), r.direction());
+		double b = dot(oc, r.direction());
+		double c = dot(oc, oc) - radius_*radius_;
 		double discriminant = b*b - a*c;
 		if (discriminant > 0) {
 			double temp = (-b - sqrt(discriminant)) / a;
 			if (temp < tmax && temp > tmin) {
 				rec.t = temp;
 				rec.p = r.get(rec.t);
-				rec.normal = (rec.p - center) / radius;
-				rec.mat_ptr = mat_ptr;
+				rec.normal = (rec.p - center_) / radius_;
+				rec.mat_ptr = mat_ptr_;
 				return true;
 			}
 			temp = (-b + sqrt(discriminant)) / a;
 			if (temp < tmax && temp > tmin) {
 				rec.t = temp;
 				rec.p = r.get(rec.t);
-				rec.normal = (rec.p - center) / radius;
-				rec.mat_ptr = mat_ptr;
+				rec.normal = (rec.p - center_) / radius_;
+				rec.mat_ptr = mat_ptr_;
 				return true;
 			}
 		}
@@ -163,7 +155,6 @@ public:
 
 class Material {
 protected:
-	static my_rand s_rand;
 	static double schlick(double cosine, double ref_idx) {
 		double r0 = (1 - ref_idx) / (1 + ref_idx);
 		r0 = r0 * r0;
@@ -171,7 +162,7 @@ protected:
 	}
 
 public:
-	virtual bool scatter(const Ray& r_in, const HitRecord& rec, Vec3& attenuation, Ray& scattered) const = 0;
+	virtual bool scatter(const Ray& r_in, const HitRecord& rec, Vec3& attenuation, Ray& scattered, my_rand &rnd) const = 0;
 };
 
 class Lambertian : public Material {
@@ -179,8 +170,8 @@ private:
 	Vec3 albedo;
 public:
 	Lambertian(const Vec3& a) : albedo(a) {}
-	virtual bool scatter(const Ray& r_in, const HitRecord& rec, Vec3& attenuation, Ray& scattered) const {
-		Vec3 target = rec.p + rec.normal + Vec3::random_in_unit_sphere();
+	virtual bool scatter(const Ray& r_in, const HitRecord& rec, Vec3& attenuation, Ray& scattered, my_rand &rnd) const {
+		Vec3 target = rec.p + rec.normal + Vec3::random_in_unit_sphere(rnd);
 		scattered = Ray(rec.p, target - rec.p);
 		attenuation = albedo;
 		return true;
@@ -193,18 +184,18 @@ private:
 	float fuzz;
 public:
 	Metal(const Vec3& a, float f) : albedo(a) { if (f < 1) fuzz = f; else fuzz = 1; }
-	virtual bool scatter(const Ray& r_in, const HitRecord& rec, Vec3& attenuation, Ray& scattered) const {
+	virtual bool scatter(const Ray& r_in, const HitRecord& rec, Vec3& attenuation, Ray& scattered, my_rand &rnd) const {
 		Vec3 reflected = r_in.direction().normalize().reflect(rec.normal);
-		scattered = Ray(rec.p, reflected + Vec3::random_in_unit_sphere() * fuzz);
+		scattered = Ray(rec.p, reflected + Vec3::random_in_unit_sphere(rnd) * fuzz);
 		attenuation = albedo;
-		return (Vec3::dot(scattered.direction(), rec.normal) > 0);
+		return (dot(scattered.direction(), rec.normal) > 0);
 	}
 };
 
 class Dielectric : public Material {
 public:
 	Dielectric(float ri) : ref_idx(ri) {}
-	virtual bool scatter(const Ray& r_in, const HitRecord& rec, Vec3& attenuation, Ray& scattered) const {
+	virtual bool scatter(const Ray& r_in, const HitRecord& rec, Vec3& attenuation, Ray& scattered, my_rand &rnd) const {
 		Vec3 outward_normal;
 		Vec3 reflected = r_in.direction().reflect(rec.normal);
 		double ni_over_nt;
@@ -212,23 +203,23 @@ public:
 		Vec3 refracted;
 		double reflect_prob;
 		double cosine;
-		if (Vec3::dot(r_in.direction(), rec.normal) > 0) {
+		if (dot(r_in.direction(), rec.normal) > 0) {
 			outward_normal = -rec.normal;
 			ni_over_nt = ref_idx;
 //         cosine = ref_idx * dot(r_in.direction(), rec.normal) / r_in.direction().length();
-			cosine = Vec3::dot(r_in.direction(), rec.normal) / r_in.direction().length();
+			cosine = dot(r_in.direction(), rec.normal) / r_in.direction().length();
 			cosine = sqrt(1 - ref_idx*ref_idx*(1 - cosine*cosine));
 		}
 		else {
 			outward_normal = rec.normal;
 			ni_over_nt = 1.0 / ref_idx;
-			cosine = -Vec3::dot(r_in.direction(), rec.normal) / r_in.direction().length();
+			cosine = -dot(r_in.direction(), rec.normal) / r_in.direction().length();
 		}
 		if (r_in.direction().refract(outward_normal, ni_over_nt, refracted))
 			reflect_prob = schlick(cosine, ref_idx);
 		else
 			reflect_prob = 1.0;
-		if (s_rand.get() < reflect_prob)
+		if (rnd.get() < reflect_prob)
 			scattered = Ray(rec.p, reflected);
 		else
 			scattered = Ray(rec.p, refracted);
