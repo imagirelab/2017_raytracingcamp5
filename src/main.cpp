@@ -85,10 +85,13 @@ int main()
 		pRenderer->update(fb[1 - current], fb[current]);
 		frame++;
 
-		// 30 秒ごとに出力
+		// 4分33秒以内に終了なので、前のフレームを考えてオーバーしそうならば終了する
 		time_t t = time(NULL) - t0;
+		bool finished = (FINISH_TIME - FINISH_MARGIN <= t + (t - t_last));
+
+		// 30 秒ごとか最後に出力
 		int c = (int)(t / OUTPUT_INTERVAL);
-		if (count < c) {
+		if (count < c || finished) {
 			// sprintf_s を使いたくなくて、古典的な手法
 			char filename[256] = { '0', '0', '.', 'p', 'n', 'g', '\0' };
 			filename[0] = '0' + (c / 10);
@@ -97,8 +100,7 @@ int main()
 			count++;
 		}
 
-		// 4分33秒以内に終了なので、前のフレームを考えてオーバーしそうならば終了する
-		if (FINISH_TIME - FINISH_MARGIN <= t + (t - t_last)) break;
+		if (finished) break;
 
 		// swap
 		current = 1 - current;
