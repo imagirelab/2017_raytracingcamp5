@@ -54,7 +54,7 @@ renderer::~renderer()
 
 Vec3 renderer::raytrace(Ray r, int depth, my_rand &rnd)const
 {
-	// noise for debug
+	// for debugging
 //	return Vec3(0,0,0);
 //	return Vec3(rand_.get(), rand_.get(), rand_.get());
 
@@ -98,9 +98,9 @@ void renderer::update(const double *src, double *dest)const
 				int index = 3 * (y * WIDTH + x);
 
 				double u = ((double)x + rnd.get()) * INV_WIDTH;
-				double v = 1.0 - ((double)y + rnd.get()) * INV_HEIGHT;
+				double v = ((double)y + rnd.get()) * INV_HEIGHT;
 
-				Vec3 color = this->color(u, v, rnd);
+				Vec3 color = this->color(u, 1.0 - v, rnd);// ‰æ‘œ“I‚Éã‰º‹t‚¾‚Á‚½‚Ì‚ÅAv‚ğ”½“]‚·‚é
 				dest[index + 0] = src[index + 0] + color.x;
 				dest[index + 1] = src[index + 1] + color.y;
 				dest[index + 2] = src[index + 2] + color.z;
