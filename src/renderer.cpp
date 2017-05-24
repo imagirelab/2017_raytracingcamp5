@@ -54,7 +54,7 @@ renderer::~renderer()
 Vec3 renderer::raytrace(Ray r, int depth, my_rand &rnd)const
 {
 	// noise for debug
-	return Vec3(0,0,0);
+//	return Vec3(0,0,0);
 //	return Vec3(rand_.get(), rand_.get(), rand_.get());
 
 	HitRecord rec;

@@ -2,7 +2,7 @@
 //#define _CRT_SECURE_NO_WARNINGS
 
 // VCでのリークチェック（_CrtSetDbgFlagも有効に）
-//#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
+#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
 // Visual Leak Detector でのチェック
 // #include <vld.h>
 
@@ -25,25 +25,29 @@
 //#define WIDTH 1920
 //#define HEIGHT 1080
 
-#define OUTPUT_INTERVAL 30
-#define FINISH_TIME (4 * 60 + 33)
+#define OUTPUT_INTERVAL 10
+#define FINISH_TIME (0 * 60 + 13)
 #define FINISH_MARGIN 2
 
 void save(const double *data, unsigned char *buf, const char *filename, int steps)
 {
 	const double coeff = 1.0 / (10.1 * (double)steps);
-	#pragma omp parallel for
-	for (int i = 0; i < WIDTH * HEIGHT; i++) {
-		int src = i * 3;
-		double tmp0 = data[src + 0] / (double)steps;// tone mapping
-		double tmp1 = data[src + 1] / (double)steps;// tone mapping
-		double tmp2 = data[src + 2] / (double)steps;// tone mapping
-		int idx = i << 2;
-//		double tmp = 1.0 - exp(-data[i] * coeff);// tone mapping
-		buf[idx + 0] = (unsigned char)(pow(tmp0, 1.0 / 2.2) * 255.999);// gamma correct
-		buf[idx + 1] = (unsigned char)(pow(tmp1, 1.0 / 2.2) * 255.999);// gamma correct
-		buf[idx + 2] = (unsigned char)(pow(tmp2, 1.0 / 2.2) * 255.999);// gamma correct
-		buf[idx + 3] = 0xff;
+	
+	#pragma omp parallel
+	{
+		#pragma omp for
+		for (int i = 0; i < WIDTH * HEIGHT; i++) {
+			int src = i * 3;
+			double tmp0 = data[src + 0] / (double)steps;// tone mapping
+			double tmp1 = data[src + 1] / (double)steps;// tone mapping
+			double tmp2 = data[src + 2] / (double)steps;// tone mapping
+			int idx = i << 2;
+			//		double tmp = 1.0 - exp(-data[i] * coeff);// tone mapping
+			buf[idx + 0] = (unsigned char)(pow(tmp0, 1.0 / 2.2) * 255.999);// gamma correct
+			buf[idx + 1] = (unsigned char)(pow(tmp1, 1.0 / 2.2) * 255.999);// gamma correct
+			buf[idx + 2] = (unsigned char)(pow(tmp2, 1.0 / 2.2) * 255.999);// gamma correct
+			buf[idx + 3] = 0xff;
+		}
 	}
 
 	// save
@@ -56,7 +60,7 @@ void save(const double *data, unsigned char *buf, const char *filename, int step
 
 static void initFB(double *fb)
 {
-//	#pragma omp parallel for
+	#pragma omp parallel for
 	for (int i = 0; i < 3 * WIDTH * HEIGHT; i++) {
 		fb[i] = 0.0;
 	}
@@ -64,7 +68,7 @@ static void initFB(double *fb)
 
 int main()
 {
-//	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	time_t t0 = time(NULL);
 	time_t t_last = 0;

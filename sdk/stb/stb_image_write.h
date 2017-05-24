@@ -1,58 +1,40 @@
 /* stb_image_write - v1.05 - public domain - http://nothings.org/stb/stb_image_write.h
    writes out PNG/BMP/TGA images to C stdio - Sean Barrett 2010-2015
                                      no warranty implied; use at your own risk
-
    Before #including,
-
        #define STB_IMAGE_WRITE_IMPLEMENTATION
-
    in the file that you want to have the implementation.
-
    Will probably not work correctly with strict-aliasing optimizations.
-
 ABOUT:
-
    This header file is a library for writing images to C stdio. It could be
    adapted to write to memory or a general streaming interface; let me know.
-
    The PNG output is not optimal; it is 20-50% larger than the file
    written by a decent optimizing implementation. This library is designed
    for source code compactness and simplicity, not optimal image file size
    or run-time performance.
-
 BUILDING:
-
    You can #define STBIW_ASSERT(x) before the #include to avoid using assert.h.
    You can #define STBIW_MALLOC(), STBIW_REALLOC(), and STBIW_FREE() to replace
    malloc,realloc,free.
    You can define STBIW_MEMMOVE() to replace memmove()
-
 USAGE:
-
    There are four functions, one for each image file format:
-
      int stbi_write_png(char const *filename, int w, int h, int comp, const void *data, int stride_in_bytes);
      int stbi_write_bmp(char const *filename, int w, int h, int comp, const void *data);
      int stbi_write_tga(char const *filename, int w, int h, int comp, const void *data);
      int stbi_write_hdr(char const *filename, int w, int h, int comp, const float *data);
-
    There are also four equivalent functions that use an arbitrary write function. You are
    expected to open/close your file-equivalent before and after calling these:
-
      int stbi_write_png_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data, int stride_in_bytes);
      int stbi_write_bmp_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data);
      int stbi_write_tga_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const void  *data);
      int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int w, int h, int comp, const float *data);
-
    where the callback is:
       void stbi_write_func(void *context, void *data, int size);
-
    You can define STBI_WRITE_NO_STDIO to disable the file variant of these
    functions, so the library will not use stdio.h at all. However, this will
    also disable HDR writing, because it requires stdio for formatted output.
-
    Each function returns 0 on failure and non-0 on success.
-
    The functions create an image file defined by the parameters. The image
    is a rectangle of pixels stored from left-to-right, top-to-bottom.
    Each pixel contains 'comp' channels of data stored interleaved with 8-bits
@@ -61,27 +43,21 @@ USAGE:
    The *data pointer points to the first byte of the top-left-most pixel.
    For PNG, "stride_in_bytes" is the distance in bytes from the first byte of
    a row of pixels to the first byte of the next row of pixels.
-
    PNG creates output files with the same number of components as the input.
    The BMP format expands Y to RGB in the file format and does not
    output alpha.
-
    PNG supports writing rectangles of data even when the bytes storing rows of
    data are not consecutive in memory (e.g. sub-rectangles of a larger image),
    by supplying the stride between the beginning of adjacent rows. The other
    formats do not. (Thus you cannot write a native-format BMP through the BMP
    writer, both because it is in BGR order and because it may have padding
    at the end of the line.)
-
    HDR expects linear float data. Since the format is always 32-bit rgb(e)
    data, alpha (if provided) is discarded, and for monochrome data it is
    replicated across all three channels.
-
    TGA supports RLE or non-RLE compressed data. To use non-RLE-compressed
    data, set the global variable 'stbi_write_tga_with_rle' to 0.
-
 CREDITS:
-
    PNG/BMP/TGA
       Sean Barrett
    HDR
@@ -107,9 +83,7 @@ CREDITS:
       Patrick Boettcher
       
 LICENSE
-
   See end of file for license information.
-
 */
 
 #ifndef INCLUDE_STB_IMAGE_WRITE_H
@@ -610,7 +584,7 @@ static int stbi_write_hdr_core(stbi__write_context *s, int x, int y, int comp, f
       char header[] = "#?RADIANCE\n# Written by stb_image_write.h\nFORMAT=32-bit_rle_rgbe\n";
       s->func(s->context, header, sizeof(header)-1);
 
-      len = snprintf(buffer, sizeof(buffer), "EXPOSURE=          1.0000000000000\n\n-Y %d +X %d\n", y, x);
+      len = sprintf(buffer, "EXPOSURE=          1.0000000000000\n\n-Y %d +X %d\n", y, x);
       s->func(s->context, buffer, len);
 
       for(i=0; i < y; i++)
@@ -905,9 +879,8 @@ unsigned char *stbi_write_png_to_mem(unsigned char *pixels, int stride_bytes, in
 
    if (stride_bytes == 0)
       stride_bytes = x * n;
-   int v = (x*n + 1) * y;
-   filt = (unsigned char *) STBIW_MALLOC(v);
-   if (filt== nullptr) return 0;
+
+   filt = (unsigned char *) STBIW_MALLOC((x*n+1) * y); if (!filt) return 0;
    line_buffer = (signed char *) STBIW_MALLOC(x * n); if (!line_buffer) { STBIW_FREE(filt); return 0; }
    for (j=0; j < y; ++j) {
       static int mapping[] = { 0,1,2,3,4 };
