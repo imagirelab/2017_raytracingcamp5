@@ -95,7 +95,6 @@ public:
 	Sphere() {}
 	Sphere(Vec3 cen, double r, Material *m) : center_(cen), radius_(r), mat_ptr_(m) {};
 	bool hit(const Ray& r, double tmin, double tmax, HitRecord& rec) const {
-		return false;
 		Vec3 oc = r.origin() - center_;
 		double a = dot(r.direction(), r.direction());
 		double b = dot(oc, r.direction());
@@ -140,6 +139,7 @@ public:
 	void Append(Hitable *l) { if (n_ < LIST_MAX) { list[n_++] = l; } }
 	bool hit(const Ray &r, double tmin, double tmax, HitRecord& rec) const
 	{
+return false;
 		HitRecord temp_rec;
 		bool hit_anything = false;
 		double closest_so_far = tmax;
