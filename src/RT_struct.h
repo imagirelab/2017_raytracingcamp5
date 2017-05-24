@@ -95,6 +95,7 @@ public:
 	Sphere() {}
 	Sphere(Vec3 cen, double r, Material *m) : center_(cen), radius_(r), mat_ptr_(m) {};
 	bool hit(const Ray& r, double tmin, double tmax, HitRecord& rec) const {
+		return false;
 		Vec3 oc = r.origin() - center_;
 		double a = dot(r.direction(), r.direction());
 		double b = dot(oc, r.direction());
