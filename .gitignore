@@ -83,7 +83,7 @@ ipch/
 *.vsp
 *.vspx
 *.sap
-
+.vs
 
 # editor
 *.bak

@@ -25,8 +25,8 @@
 #define WIDTH 1920
 #define HEIGHT 1080
 
-#define OUTPUT_INTERVAL 10
-#define FINISH_TIME (0 * 60 + 13)
+#define OUTPUT_INTERVAL 30
+#define FINISH_TIME (4 * 60 + 33)
 #define FINISH_MARGIN 2
 
 void save(const double *data, unsigned char *buf, const char *filename, int steps)
