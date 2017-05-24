@@ -30,7 +30,7 @@
 
 void save(const double *data, unsigned char *buf, const char *filename, int steps)
 {
-	const double coeff = 1.0 / (10.1 * (double)steps);
+	const double coeff = 1.0 / (0.3 * (double)steps);
 	
 	#pragma omp parallel
 	{
