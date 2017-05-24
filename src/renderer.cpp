@@ -58,10 +58,10 @@ Vec3 renderer::raytrace(Ray r, int depth, my_rand &rnd)const
 
 	HitRecord rec;
 	if (scene_.hit(r, 0.001, DBL_MAX, rec)) {
+		return Vec3(0, 0, 0);
 		Ray scattered;
 		Vec3 attenuation;
 		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered, rnd)) {
-			return Vec3(0, 0, 0);
 			return attenuation * raytrace(scattered, depth + 1, rnd);
 		}
 		else {
