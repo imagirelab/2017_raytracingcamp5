@@ -1,4 +1,5 @@
 #include <cfloat>
+#include <time.h>
 #include <omp.h>
 #include "renderer.h"
 
@@ -81,24 +82,29 @@ Vec3 renderer::color(double u, double v, my_rand &rnd)const
 	return raytrace(r, 0, rnd);
 }
 
-void renderer::update(const double *src, double *dest, my_rand *a_rand)const
+void renderer::update(const double *src, double *dest)const
 {
 	const double INV_WIDTH = 1.0 / (double)WIDTH;
 	const double INV_HEIGHT = 1.0 / (double)HEIGHT;
+	
+	clock_t start = clock();
 
-	#pragma omp parallel for
-	for (int y = 0; y < HEIGHT; y++) {
-		my_rand &rnd = a_rand[omp_get_thread_num()];
-		for (int x = 0; x < WIDTH; x++) {
-			int index = 3 * (y * WIDTH + x);
+	#pragma omp parallel
+	{
+		my_rand rnd(start);
+		#pragma omp for
+		for (int y = 0; y < HEIGHT; y++) {
+			for (int x = 0; x < WIDTH; x++) {
+				int index = 3 * (y * WIDTH + x);
 
-			double u = ((double)x + rnd.get()) * INV_WIDTH;
-			double v = 1.0 - ((double)y + rnd.get()) * INV_HEIGHT;
+				double u = ((double)x + rnd.get()) * INV_WIDTH;
+				double v = 1.0 - ((double)y + rnd.get()) * INV_HEIGHT;
 
-			Vec3 color = this->color(u, v, rnd);
-			dest[index + 0] = src[index + 0] + color.x;
-			dest[index + 1] = src[index + 1] + color.y;
-			dest[index + 2] = src[index + 2] + color.z;
+				Vec3 color = this->color(u, v, rnd);
+				dest[index + 0] = src[index + 0] + color.x;
+				dest[index + 1] = src[index + 1] + color.y;
+				dest[index + 2] = src[index + 2] + color.z;
+			}
 		}
 	}
 }

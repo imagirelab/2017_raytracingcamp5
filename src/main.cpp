@@ -2,7 +2,7 @@
 //#define _CRT_SECURE_NO_WARNINGS
 
 // VCでのリークチェック（_CrtSetDbgFlagも有効に）
-#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
+//#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
 // Visual Leak Detector でのチェック
 // #include <vld.h>
 
@@ -20,10 +20,10 @@
 // おおよそ30秒毎に、レンダリングの途中経過をbmpかpngで連番(000.png, 001.png, ...) で出力してください。
 // 4分33秒以内に自動で終了してください。
 
-#define WIDTH 100
-#define HEIGHT 200
-//#define WIDTH 1920
-//#define HEIGHT 1080
+//#define WIDTH 200
+//#define HEIGHT 100
+#define WIDTH 1920
+#define HEIGHT 1080
 
 #define OUTPUT_INTERVAL 10
 #define FINISH_TIME (0 * 60 + 13)
@@ -68,7 +68,7 @@ static void initFB(double *fb)
 
 int main()
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
+//	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	time_t t0 = time(NULL);
 	time_t t_last = 0;
@@ -84,7 +84,6 @@ int main()
 	initFB(fb[0]);
 	initFB(fb[1]);
 
-	my_rand *a_rand = new my_rand[omp_get_num_threads()];
 	renderer *pRenderer = new renderer(WIDTH, HEIGHT);
 
 	int steps = 0;
@@ -92,7 +91,7 @@ int main()
 	{
 		// fb[1-current] を読み込んで fb[current]にレンダリング
 //		std::this_thread::sleep_for(std::chrono::seconds(1));
-		pRenderer->update(fb[1 - current], fb[current], a_rand);
+		pRenderer->update(fb[1 - current], fb[current]);
 
 		steps++;
 
@@ -117,7 +116,6 @@ int main()
 	}while (true);
 
 	delete pRenderer;
-	delete[] a_rand;
 	delete[] image;
 	delete[] fb[0];
 	delete[] fb[1];

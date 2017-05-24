@@ -18,7 +18,7 @@ private:
 		return s_[3] = (s_[3] ^ (s_[3] >> 19)) ^ (t ^ (t >> 8));
 	}
 public:
-	my_rand(const unsigned int init = 1234567890) {
+	my_rand(unsigned int init = 1234567890) {
 		unsigned int s = init;
 		s_[0] = s = 1812433253U * (s ^ (s >> 30)) + 1;
 		s_[1] = s = 1812433253U * (s ^ (s >> 30)) + 2;

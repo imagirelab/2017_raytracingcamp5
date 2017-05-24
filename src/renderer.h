@@ -38,7 +38,7 @@ public:
 	renderer(int w, int h);
 	~renderer();
 	
-	void update(const double *src, double *dest, my_rand *a_rand)const;// ‹É—Í‘‚­”²‚¯‚é‚±‚Æ
+	void update(const double *src, double *dest)const;// ‹É—Í‘‚­”²‚¯‚é‚±‚Æ
 };
 
 #endif // !RENDERER_H
