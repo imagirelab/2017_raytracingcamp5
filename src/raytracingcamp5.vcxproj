@@ -147,6 +147,7 @@
     <ClCompile Include="renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\sdk\stb\stb_image_write.h" />
     <ClInclude Include="my_rand.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="RT_struct.h" />

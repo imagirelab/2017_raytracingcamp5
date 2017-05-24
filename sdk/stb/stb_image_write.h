@@ -905,8 +905,9 @@ unsigned char *stbi_write_png_to_mem(unsigned char *pixels, int stride_bytes, in
 
    if (stride_bytes == 0)
       stride_bytes = x * n;
-
-   filt = (unsigned char *) STBIW_MALLOC((x*n+1) * y); if (!filt) return 0;
+   int v = (x*n + 1) * y;
+   filt = (unsigned char *) STBIW_MALLOC(v);
+   if (filt== nullptr) return 0;
    line_buffer = (signed char *) STBIW_MALLOC(x * n); if (!line_buffer) { STBIW_FREE(filt); return 0; }
    for (j=0; j < y; ++j) {
       static int mapping[] = { 0,1,2,3,4 };

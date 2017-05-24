@@ -1,9 +1,16 @@
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define _CRT_SECURE_NO_WARNINGS
+
+// VCでのリークチェック（_CrtSetDbgFlagも有効に）
+//#define _CRTDBG_MAP_ALLOC #include <stdlib.h> #include <crtdbg.h>
+// Visual Leak Detector でのチェック
+// #include <vld.h>
+
 #include <iostream>
 #include <thread>
 #include <time.h>
 #include <omp.h>
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../sdk/stb/stb_image_write.h"
 
 #include "renderer.h"
@@ -12,8 +19,8 @@
 // おおよそ30秒毎に、レンダリングの途中経過をbmpかpngで連番(000.png, 001.png, ...) で出力してください。
 // 4分33秒以内に自動で終了してください。
 
-#define WIDTH 400
-#define HEIGHT 300
+#define WIDTH 1920
+#define HEIGHT 1080
 
 #define OUTPUT_INTERVAL 30
 #define FINISH_TIME (4 * 60 + 33)
@@ -39,6 +46,8 @@ void save(const double *data, unsigned char *buf, const char *filename, int step
 
 int main()
 {
+//	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	time_t t0 = time(NULL);
 	time_t t_last = 0;
 	int count = 0;
@@ -66,6 +75,7 @@ int main()
 //		std::this_thread::sleep_for(std::chrono::seconds(1));
 		pRenderer->update(fb[1 - current], fb[current], a_rand);
 
+		#pragma omp barrier
 		steps++;
 
 		// swap
@@ -75,8 +85,9 @@ int main()
 		time_t t = time(NULL) - t0;
 		int c = (int)(t / OUTPUT_INTERVAL);
 		if (count < c) {
-			char filename[256];
-			snprintf(filename, 256, "%d.png", c);
+			char filename[256] = { '0', '0', '.', 'p', 'n', 'g', '\0' };
+			filename[0] = '0' + (c / 10);
+			filename[1] = '0' + (c % 10);
 			save(fb[1 - current], image, filename, steps);
 			count++;
 		}

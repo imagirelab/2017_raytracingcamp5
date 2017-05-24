@@ -40,7 +40,8 @@ renderer::renderer(int w, int h)
 
 	// scene
 	double R = cos(PI / 4);
-	scene_.Append(new Sphere(Vec3(0, -1000, 0), 1000, new Lambertian(Vec3(0.5, 0.5, 0.5))));
+	Material *p = new Lambertian(Vec3(0.5, 0.5, 0.5));
+	scene_.Append(new Sphere(Vec3(0, -1000, 0), 1000, p));
 	scene_.Append(new Sphere(Vec3(0, 1, 0), 1.0, new Dielectric(1.5)));
 	scene_.Append(new Sphere(Vec3(-4, 1, 0), 1.0, new Lambertian(Vec3(0.4, 0.2, 0.1))));
 	scene_.Append(new Sphere(Vec3(4, 1, 0), 1.0, new Metal(Vec3(0.7, 0.6, 0.5), 0.0)));
