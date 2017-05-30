@@ -38,6 +38,6 @@ public:
 	renderer(int w, int h);
 	~renderer();
 	
-	void update(const double *src, double *dest)const;// ‹É—Í‘‚­”²‚¯‚é‚±‚Æ
+	void update(const double *src, double *dest)const;// なるべく早く出ること
 };
 #endif // !RENDERER_H
