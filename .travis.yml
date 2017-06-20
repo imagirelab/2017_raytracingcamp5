@@ -21,7 +21,8 @@ script:
 after_success: # デプロイ
   - test "$TRAVIS_BRANCH" != "master" && exit 1 # マスターブランチが更新されたのでなければ無視
   - test "$TRAVIS_PULL_REQUEST" = "true" && exit 1 # プルリクで呼ばれた時にはデプロイしない
-  - cp ../../static/* . # 静的なHTMLファイルを取ってくる
+  # 静的なHTMLファイルを取ってくる
+  - cp ../../static/* . 
   # git に新しくpush
   - git config --global user.email "$email"
   - git config --global user.name "$username"
