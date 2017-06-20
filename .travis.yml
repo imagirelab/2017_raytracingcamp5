@@ -7,6 +7,7 @@ env:
 script:
   # gcc のバージョンを確認してみる
   - g++ --version
+  - pwd;find . | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*/| /g'
   # build
   - cd src
   - mkdir bin
@@ -18,7 +19,6 @@ script:
   - cd bin
   - zip -r raytracingcamp.zip ./ #zip を作る
   - ./a.out # プログラムの実行!
-  - ls -R ../ | grep ":" | sed -e 's/://' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 after_success: # デプロイ
   - test "$TRAVIS_BRANCH" != "master" && exit 1 # マスターブランチが更新されたのでなければ無視
   - test "$TRAVIS_PULL_REQUEST" = "true" && exit 1 # プルリクで呼ばれた時にはデプロイしない
@@ -31,4 +31,4 @@ after_success: # デプロイ
   - git add --all
   - git commit -m "deploy commit from travis"
   - git push -f https://${GH_TOKEN}@github.com/imagirelab/rtc5.git master
-  
+ 
