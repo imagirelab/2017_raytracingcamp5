@@ -13,6 +13,7 @@ script:
   - make
   - ls -lsaR
   - cd bin
+  - zip -r raytracingcamp.zip ./ #create zip archive
   - ./a.out
 after_success:
 #  - echo $TRAVIS_PULL_REQUEST
