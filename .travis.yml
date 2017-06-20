@@ -18,6 +18,7 @@ script:
   - cd bin
   - zip -r raytracingcamp.zip ./ #zip を作る
   - ./a.out # プログラムの実行!
+  - tree ../
 after_success: # デプロイ
   - test "$TRAVIS_BRANCH" != "master" && exit 1 # マスターブランチが更新されたのでなければ無視
   - test "$TRAVIS_PULL_REQUEST" = "true" && exit 1 # プルリクで呼ばれた時にはデプロイしない
