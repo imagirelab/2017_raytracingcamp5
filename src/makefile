@@ -1,11 +1,12 @@
 TARGET=./bin/a.out
 
 CPP=g++
-OPT=-std=c++0x -fopenmp -O3
+OPT=-std=c++0x  -static-libgcc -static-libstdc++ -L. -fopenmp -O3
 INC=
 LIB=
 
 -include makefile.opt
+ln -s `g++ -print-file-name=libgomp.a`
 
 .SUFFIXES:.cpp .c .o .h
 
@@ -15,6 +16,7 @@ OBJ=$(SRC:.cpp=.o)
 
 all: $(TARGET)
 $(TARGET): $(OBJ)
+	ln -s `g++ -print-file-name=libgomp.a`
 	$(CPP) $(OPT) -o $(TARGET) $(OBJ) $(LIB)
 
 .c.o:
